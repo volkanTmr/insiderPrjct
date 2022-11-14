@@ -1,15 +1,19 @@
-import org.apache.commons.io.FileUtils;
-import org.junit.Assert;
+
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.Assert;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
+
+@Listeners(TestListeners.class)
 public class InsiderWork {
 
 
@@ -42,8 +46,8 @@ public class InsiderWork {
         public static void initialize() throws IOException, InterruptedException {
             driver = InitializeDriver(driver);
         }
-
-        public static void main(String[] args) throws IOException, InterruptedException {
+        @Test
+        public void TestListen() throws IOException, InterruptedException {
 
             initialize();
             driver.manage().window().maximize();
@@ -101,17 +105,11 @@ public class InsiderWork {
             }
 
             // 4- check all positions include QA , Istanbul
-            Thread.sleep(3000);
-            List<WebElement> positions = driver.findElements(By.xpath("//p[@class='position-title.font-weight-bold']"));
+            Thread.sleep(5000);
+            List<WebElement>positions=driver.findElements(By.cssSelector("div[class='position-list-item-wrapper bg-light']"));
             for (WebElement position : positions) {
-                if (position.getText().contains("Quality Assurence")) {
-                    System.out.println("all work positins include Quality Assurence");
-
-                } else {
-
-                    File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-                    FileUtils.copyFile(src, new File("C://android//repository//screenshotPOS.png"));
-                }
+                Assert.assertTrue(position.getText().toLowerCase(Locale.ROOT).contains("Quality Assurance".toLowerCase(Locale.ROOT)));
+                Assert.assertTrue(position.getText().toLowerCase(Locale.ROOT).contains("Istanbul".toLowerCase(Locale.ROOT)));
             }
 
             // 5- when click Apply Now redirects Lever Application Page check
